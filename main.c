@@ -84,7 +84,14 @@ void raw_mode_on() {
 }
 #else
 // windows bullshit for raw mode
-
+void disable_windows_raw_mode() {
+    if (hInputStream != INVALID_HANDLE_VALUE) {
+        SetConsoleMode(hInputStream, original_input_mode);
+    }
+    if (hOutputStream != INVALID_HANDLE_VALUE) {
+        SetConsoleMode(hOutputStream, original_output_mode);
+    }
+}
 void enable_windows_raw_mode() {
     // 1. Get handles to the standard console streams
     hInputStream = GetStdHandle(STD_INPUT_HANDLE);
@@ -121,14 +128,7 @@ void enable_windows_raw_mode() {
     // Set console output code page to UTF-8 so icons/borders look crisp
     SetConsoleOutputCP(CP_UTF8);
 }
-void disable_windows_raw_mode() {
-    if (hInputStream != INVALID_HANDLE_VALUE) {
-        SetConsoleMode(hInputStream, original_input_mode);
-    }
-    if (hOutputStream != INVALID_HANDLE_VALUE) {
-        SetConsoleMode(hOutputStream, original_output_mode);
-    }
-}
+
 #endif
 
 //===============
